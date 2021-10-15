@@ -1,4 +1,6 @@
-### Variable Declarations
+### Variable Declarations and Properties
+export CLICOLOR=1
+export COLORTERM=truecolor
 
 ### END Variables Declarations
 
@@ -38,6 +40,24 @@ PROMPT='${PMPT_LAST_CMD_STATUS}${PMPT_CURRENT_DIR} ${PMPT_IS_PRIVILEGED}'
 RPROMPT='$vcs_info_msg_0_'
 ### END ZSH Prompt
 
-### Aliases
 
+### Navigation
+function prototype() {
+    local prot_dir="$HOME/Documents/Carreira/Projetos/Desenvolvimento/Prototipos"
+    if [ "$#" -lt 1 ]; then
+        ls "$prot_dir"
+    else
+        cd "$prot_dir/$1"
+    fi
+}
+
+function aulas() {
+    cd "$HOME/Documents/Carreira/UESC/Aulas/$1"
+}
+### END Navigation
+
+
+### Aliases
+alias ls="ls -G"
+alias ll="ls -l -G"
 ### END Aliases
