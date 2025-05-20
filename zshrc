@@ -62,6 +62,11 @@ function aulas() {
 
 
 ### Aliases
-alias ls="ls -G"
-alias ll="ls -l -G"
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    alias ls='ls --color=auto'
+    alias ll='ls -lah --color=auto' 
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ls='ls -G'
+    alias ll="ls -l -G"
+fi
 ### END Aliases
