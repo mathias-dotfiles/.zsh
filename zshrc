@@ -34,9 +34,8 @@ precmd_functions+=(precmd_vcs_info)
 ### Set up the prompt (with git branch name)
 
 # Check if in a SSH Session and add Icon to prompt
-PMPT_LAST_CMD_STATUS='%(?.%B%F{034}✔%f%b.%B%F{196}✘%f%b) '
-PROMPT="${PMPT_LAST_CMD_STATUS}"
-if [[ -n "$SSH_CONNECTION" ]]; && PROMPT="${PROMPT}%B%F{120}%m %f%b "
+PMPT_STATUS='%(?.%B%F{034}✔%f%b.%B%F{196}✘%f%b) '
+if [[ -n "$SSH_CONNECTION" ]]; && PMPT_DETAILED_STATUS="${PMPT_STATUS}%B%F{120}%m %f%b " && PMPT_MIN_STATUS="${PMPT_STATUS}%B%F{120} %f%b "
 PMPT_CURRENT_DIR='in %2~' 
 if [[ $EUID -eq 0 ]]; then
   PMPT_USER='%B%F{160} root%f%b ' 
@@ -52,12 +51,12 @@ fi
 
 
 function pmpt_clean() {
-    PROMPT="${PMPT_MIN_USER}${PMPT_MIN_IS_PRIVILEGED}"
+    PROMPT="${PMPT_MIN_STATUS}${PMPT_MIN_USER}${PMPT_MIN_IS_PRIVILEGED}"
     RPROMPT=''
 }
 
 function pmpt_detailed() {
-    PROMPT="${PROMPT}${PMPT_USER}${PMPT_CURRENT_DIR} ${PMPT_IS_PRIVILEGED}"
+    PROMPT="${PMPT_DETAILED_STATUS}${PMPT_USER}${PMPT_CURRENT_DIR} ${PMPT_IS_PRIVILEGED}"
     RPROMPT='$vcs_info_msg_0_'
 }
 
