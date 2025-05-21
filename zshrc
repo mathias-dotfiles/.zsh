@@ -1,7 +1,7 @@
 ### Variable Declarations and Properties
 export CLICOLOR=1
 export COLORTERM=truecolor
-
+export PMPT_TYPE='detailed'
 ### END Variables Declarations
 
 ### ZSH Options
@@ -40,16 +40,34 @@ if [[ -n "$SSH_CONNECTION" ]]; && PROMPT="${PROMPT}%B%F{120}%m %f%b "
 PMPT_CURRENT_DIR='in %2~' 
 if [[ $EUID -eq 0 ]]; then
   PMPT_USER='%B%F{160} root%f%b ' 
+  PMPT_MIN_USER='${PMPT_USER} '
   PMPT_IS_PRIVILEGED='%B%F{196}%f%b '  # icon for root, red color
+  PMPT_MIN_IS_PRIVILEGED=PMPT_IS_PRIVILEGED  # icon for root, red color
 else
-  PMPT_USER='%F{136}%n%f ' 
+  PMPT_USER='%F{136}%n%f '
+  PMPT_MIN_USER='${PMPT_USER}'
   PMPT_IS_PRIVILEGED='%B%F{033}>> %f%b'
+  PMPT_MIN_IS_PRIVILEGED='%B%F{033}> %f%b'
 fi
 
-PROMPT="${PROMPT}${PMPT_USER}${PMPT_CURRENT_DIR} ${PMPT_IS_PRIVILEGED}"
-RPROMPT='$vcs_info_msg_0_'
-### END ZSH Prompt
 
+function pmpt_clean() {
+    PROMPT="${PMPT_MIN_USER}${PMPT_MIN_IS_PRIVILEGED}"
+    RPROMPT=''
+}
+
+function pmpt_detailed() {
+    PROMPT="${PROMPT}${PMPT_USER}${PMPT_CURRENT_DIR} ${PMPT_IS_PRIVILEGED}"
+    RPROMPT='$vcs_info_msg_0_'
+}
+
+if [[ "$PMPT_TYPE" == "clean" ]]; then
+    pmpt_clean
+elif [[ "$PMPT_TYPE" == "detailed" ]]; then
+    pmpt_detailed
+fi
+
+### END ZSH Prompt
 
 ### Navigation
 function prototype() {
