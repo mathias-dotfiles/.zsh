@@ -37,10 +37,16 @@ precmd_functions+=(precmd_vcs_info)
 PMPT_LAST_CMD_STATUS='%(?.%B%F{034}✔%f%b.%B%F{196}✘%f%b) '
 PROMPT="${PMPT_LAST_CMD_STATUS}"
 if [[ -n "$SSH_CONNECTION" ]]; && PROMPT="${PROMPT}%B%F{120}%m %f%b "
-PMPT_CURRENT_DIR='%F{136}%n%f in %2~' 
-PMPT_IS_PRIVILEGED='%B%F{033}>> %f%b'
+PMPT_CURRENT_DIR='in %2~' 
+if [[ $EUID -eq 0 ]]; then
+  PMPT_USER='%B%F{160} root%f%b ' 
+  PMPT_IS_PRIVILEGED='%B%F{196}%f%b '  # icon for root, red color
+else
+  PMPT_USER='%F{136}%n%f ' 
+  PMPT_IS_PRIVILEGED='%B%F{033}>> %f%b'
+fi
 
-PROMPT="${PROMPT}${PMPT_CURRENT_DIR} ${PMPT_IS_PRIVILEGED}"
+PROMPT="${PROMPT}${PMPT_USER}${PMPT_CURRENT_DIR} ${PMPT_IS_PRIVILEGED}"
 RPROMPT='$vcs_info_msg_0_'
 ### END ZSH Prompt
 
@@ -70,3 +76,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     alias ll="ls -l -G"
 fi
 ### END Aliases
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
