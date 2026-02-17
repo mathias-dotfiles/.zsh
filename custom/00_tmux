@@ -1,0 +1,36 @@
+tmux_grid() {
+  local cols=$1
+  local rows=$2
+  local session_name="${3:-${cols}x${rows}}"
+
+  # 1. Create session or attach if it already exists
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    tmux attach-session -t "$session_name"
+    return
+  fi
+
+  tmux new-session -d -s "$session_name"
+
+  # 2. Create Columns (Horizontal splits)
+  # We start with 1 pane, so we need (cols - 1) splits
+  for i in $(seq 1 $((cols - 1))); do
+    tmux split-window -h
+    tmux select-layout even-horizontal
+  done
+
+  # 3. Create Rows in each column (Vertical splits)
+  # Target every pane and split it (rows - 1) times
+  for i in $(seq 1 $((rows - 1))); do
+    tmux list-panes -F "#P" | xargs -I {} tmux split-window -v -t {}
+    tmux select-layout tiled
+  done
+
+  tmux select-pane -t 0
+  tmux attach-session -t "$session_name"
+}
+
+# Syntax: tmux_grid <columns> <rows> "$1"
+tm2x2() { tmux_grid 2 2 "$1"; }
+tm2x3() { tmux_grid 2 3 "$1"; }
+tm4x4() { tmux_grid 4 4 "$1"; }
+tm1x3() { tmux_grid 1 3 "$1"; } # 3 vertical stacked rows

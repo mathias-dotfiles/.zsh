@@ -1,2 +1,1 @@
-echo "Lading custom scipts..."
 
